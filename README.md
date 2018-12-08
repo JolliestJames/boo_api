@@ -3,7 +3,7 @@
 To start the server:
 
 * Install dependencies with `mix deps.get`
-* Create a `.env` file, and supply the following environment variables:
+* Create a `.env` file in the project directory and supply the following environment variables:
 ```
 export DB_USERNAME='<your_db_username>'
 export DB_PASSWORD='<your_db_password>'
