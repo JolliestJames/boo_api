@@ -40,3 +40,6 @@ boo_api-*.tar
 
 # Environment variables
 .env
+
+.DS_Store
+/lib/.DS_Store
