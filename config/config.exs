@@ -13,8 +13,8 @@ config :boo_api,
 # Configures the endpoint
 config :boo_api, BooApiWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "k3tqSXBOpEnjBboxdmwgC3Edp1MUlekdyjIGYe1jWKyzEaUi2F4+aG7ncvJdlzWB",
-  render_errors: [view: BooApiWeb.ErrorView, accepts: ~w(html json)],
+  secret_key_base: "nN5M5WH+BggDvrudwHo4FWvaupmYAyBjTzJIcRQeDMsW6Enf0DH5QJeMHCq6mGQ4",
+  render_errors: [view: BooApiWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: BooApi.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
