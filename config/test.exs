@@ -11,8 +11,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :boo_api, BooApi.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: System.get_env("DB_USERNAME"),
+  password: System.get_env("DB_PASSWORD"),
   database: "boo_api_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
