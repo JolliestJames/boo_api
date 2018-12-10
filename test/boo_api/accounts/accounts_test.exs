@@ -1,22 +1,34 @@
 defmodule BooApi.AccountsTest do
   use BooApi.DataCase
+  import Comeonin.Bcrypt, only: [check_pass: 2]
 
   alias BooApi.Accounts
 
   describe "users" do
     alias BooApi.Accounts.User
 
-    @valid_attrs %{email: "some email", password_hash: "some password_hash"}
-    @update_attrs %{email: "some updated email", password_hash: "some updated password_hash"}
-    @invalid_attrs %{email: nil, password_hash: nil}
+    @valid_attrs %{
+      email: "some@email",
+      password: "password",
+      password_confirmation: "password"
+    }
+    @update_attrs %{
+      email: "some_updated@email",
+      password: "password",
+      password_confirmation: "password"
+    }
+    @invalid_attrs %{
+      email: nil,
+      password: nil,
+      password_confirmation: nil
+    }
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
         attrs
         |> Enum.into(@valid_attrs)
         |> Accounts.create_user()
-
-      user
+      Accounts.get_user!(user.id)
     end
 
     test "list_users/0 returns all users" do
@@ -31,8 +43,8 @@ defmodule BooApi.AccountsTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.email == "some email"
-      assert user.password_hash == "some password_hash"
+      assert user.email == "some@email"
+      assert check_pass(user, @valid_attrs[:password]) == {:ok, user}
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -42,8 +54,8 @@ defmodule BooApi.AccountsTest do
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert user.email == "some updated email"
-      assert user.password_hash == "some updated password_hash"
+      assert user.email == @update_attrs[:email]
+      assert check_pass(user, @update_attrs[:password]) == {:ok, user}
     end
 
     test "update_user/2 with invalid data returns error changeset" do

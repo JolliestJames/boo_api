@@ -5,14 +5,20 @@ defmodule BooApiWeb.UserControllerTest do
   alias BooApi.Accounts.User
 
   @create_attrs %{
-    email: "some email",
-    password_hash: "some password_hash"
+    email: "some@email",
+    password: "password",
+    password_confirmation: "password"
   }
   @update_attrs %{
-    email: "some updated email",
-    password_hash: "some updated password_hash"
+    email: "some_updated@email",
+    password: "password",
+    password_confirmation: "password"
   }
-  @invalid_attrs %{email: nil, password_hash: nil}
+  @invalid_attrs %{
+    email: nil,
+    password: nil,
+    password_confirmation: nil
+  }
 
   def fixture(:user) do
     {:ok, user} = Accounts.create_user(@create_attrs)
@@ -39,8 +45,7 @@ defmodule BooApiWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "email" => "some email",
-               "password_hash" => "some password_hash"
+               "email" => "some@email"
              } = json_response(conn, 200)["data"]
     end
 
@@ -61,8 +66,7 @@ defmodule BooApiWeb.UserControllerTest do
 
       assert %{
                "id" => id,
-               "email" => "some updated email",
-               "password_hash" => "some updated password_hash"
+               "email" => "some_updated@email"
              } = json_response(conn, 200)["data"]
     end
 
