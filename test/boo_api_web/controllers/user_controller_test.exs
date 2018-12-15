@@ -37,16 +37,9 @@ defmodule BooApiWeb.UserControllerTest do
   end
 
   describe "create user" do
-    test "renders user when data is valid", %{conn: conn} do
+    test "returns a jwt when data is valid", %{conn: conn} do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
-
-      conn = get(conn, Routes.user_path(conn, :show, id))
-
-      assert %{
-               "id" => id,
-               "email" => "some@email"
-             } = json_response(conn, 200)["data"]
+      assert %{"jwt" => jwt} = json_response(conn, 200)
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
