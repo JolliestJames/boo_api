@@ -3,6 +3,7 @@ defmodule BooApiWeb.UserController do
 
   alias BooApi.Accounts
   alias BooApi.Accounts.User
+  alias BooApi.Guardian
 
   action_fallback BooApiWeb.FallbackController
 
@@ -12,14 +13,14 @@ defmodule BooApiWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
+    with {:ok, %User{} = user} <- Accounts.create_user(user_params),
+         {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
       conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.user_path(conn, :show, user))
-      |> render("show.json", user: user)
+      |> render("jwt.json", %{jwt: token})
     end
   end
 
+  @spec show(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     user = Accounts.get_user!(id)
     render(conn, "show.json", user: user)
