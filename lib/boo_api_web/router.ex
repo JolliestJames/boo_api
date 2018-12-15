@@ -8,6 +8,7 @@ defmodule BooApiWeb.Router do
   scope "/api/v1", BooApiWeb do
     pipe_through :api
 
+    post "/sign_in", UserController, :sign_in
     post "/sign_up", UserController, :create
   end
 
