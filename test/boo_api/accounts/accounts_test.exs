@@ -43,7 +43,7 @@ defmodule BooApi.AccountsTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.email == "some@email"
+      assert user.email == @valid_attrs[:email]
       assert check_pass(user, @valid_attrs[:password]) == {:ok, user}
     end
 
