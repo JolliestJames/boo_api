@@ -12,7 +12,7 @@ defmodule BooApi.Accounts do
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   def sign_in(email, password) do
-    case authorize(email, password) do
+    case authenticate(email, password) do
       {:ok, user} ->
         Guardian.encode_and_sign(user)
       _ ->
@@ -20,7 +20,7 @@ defmodule BooApi.Accounts do
     end
   end
 
-  defp authorize(email, password) when is_binary(email) and is_binary(password) do
+  defp authenticate(email, password) when is_binary(email) and is_binary(password) do
     with {:ok, user} <- get_by_email(email),
     do: verify_password(password, user)
   end
