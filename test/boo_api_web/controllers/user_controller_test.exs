@@ -3,6 +3,7 @@ defmodule BooApiWeb.UserControllerTest do
 
   alias BooApi.Accounts
   alias BooApi.Accounts.User
+  alias BooApi.Guardian
 
   @create_attrs %{
     email: "some@email",
@@ -48,23 +49,41 @@ defmodule BooApiWeb.UserControllerTest do
     end
   end
 
+  describe "show user" do
+    setup [:create_user]
+
+    test "returns the user's email when valid", %{conn: conn, user: %User{id: id} = user} do
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+
+      conn = conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> get(Routes.user_path(conn, :show))
+
+      assert %{"id" => ^id, "email" => "some@email"} = json_response(conn, 200)
+    end
+  end
+
   describe "update user" do
     setup [:create_user]
 
     test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
 
-      conn = get(conn, Routes.user_path(conn, :show, id))
+      conn = conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> put(Routes.user_path(conn, :update), user: @update_attrs)
 
-      assert %{
-               "id" => id,
-               "email" => "some_updated@email"
-             } = json_response(conn, 200)["data"]
+      assert %{"id" => ^id, "email" => "some_updated@email"} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
+
+
+      conn = conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> put(Routes.user_path(conn, :update), user: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -73,12 +92,14 @@ defmodule BooApiWeb.UserControllerTest do
     setup [:create_user]
 
     test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete(conn, Routes.user_path(conn, :delete, user))
-      assert response(conn, 204)
+      {:ok, token, _claims} = Guardian.encode_and_sign(user)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end
+      conn = conn
+        |> put_req_header("authorization", "Bearer #{token}")
+        |> delete(Routes.user_path(conn, :delete))
+
+      assert response(conn, 204)
+      assert_error_sent 404, fn -> get(conn, Routes.user_path(conn, :show)) end
     end
   end
 
