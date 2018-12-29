@@ -7,7 +7,7 @@ To start the server:
 ```
 export DB_USERNAME='<your_db_username>'
 export DB_PASSWORD='<your_db_password>'
-export GUARDIAN_SECRET='<your_guardian_secret>'
+export GUARDIAN_SECRET='<mix phx.gen.secret>'
 ```
 * Load environment variables with `source .env`
 * Create and migrate the database with `mix ecto.setup`
