@@ -7,36 +7,34 @@ defmodule BooApi.AccountsTest do
   alias BooApi.Accounts
   alias BooApi.Accounts.User
 
-  @valid_attrs %{
-    email: "some@email",
-    password: "password",
-    password_confirmation: "password"
-  }
-  @update_attrs %{
-    email: "some_updated@email",
-    password: "password",
-    password_confirmation: "password"
-  }
-  @invalid_attrs %{
-    email: nil,
-    password: nil,
-    password_confirmation: nil
-  }
-
   setup do
     user = insert(:user)
-    {:ok, user: Accounts.get_user!(user.id)}
+    {
+      :ok,
+      user: Accounts.get_user!(user.id),
+      valid: params_for(:user),
+      update: %{
+        email: "some_updated@email",
+        password: "password",
+        password_confirmation: "password"
+      },
+      invalid: %{
+        email: nil,
+        password: nil,
+        password_confirmation: nil
+      }
+    }
   end
 
   describe "create_user/1" do
-    test "with valid data creates a user" do
-      assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.email == @valid_attrs[:email]
-      assert check_pass(user, @valid_attrs[:password]) == {:ok, user}
+    test "with valid data creates a user", %{valid: valid} do
+      assert {:ok, %User{} = user} = Accounts.create_user(valid)
+      assert user.email == valid[:email]
+      assert check_pass(user, valid[:password]) == {:ok, user}
     end
 
-    test "with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
+    test "with invalid data returns error changeset", %{invalid: invalid} do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_user(invalid)
     end
   end
 
@@ -53,14 +51,14 @@ defmodule BooApi.AccountsTest do
   end
 
   describe "update_user/2" do
-    test "with valid data updates the user", %{user: user} do
-      assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert user.email == @update_attrs[:email]
-      assert check_pass(user, @update_attrs[:password]) == {:ok, user}
+    test "with valid data updates the user", %{user: user, update: update} do
+      assert {:ok, %User{} = user} = Accounts.update_user(user, update)
+      assert user.email == update[:email]
+      assert check_pass(user, update[:password]) == {:ok, user}
     end
 
-    test "with invalid data returns error changeset", %{user: user} do
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
+    test "with invalid data returns error changeset", %{user: user, invalid: invalid} do
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, invalid)
       assert user == Accounts.get_user!(user.id)
     end
   end
