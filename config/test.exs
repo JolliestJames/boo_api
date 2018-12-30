@@ -16,3 +16,5 @@ config :boo_api, BooApi.Repo,
   database: "boo_api_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :boo_api, :encryption_api, BooApi.EncryptionApi.MockBcrypt

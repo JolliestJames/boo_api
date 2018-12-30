@@ -26,6 +26,8 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :boo_api, :encryption_api, BooApi.EncryptionApi.Bcrypt
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
