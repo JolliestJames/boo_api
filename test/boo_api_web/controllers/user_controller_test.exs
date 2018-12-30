@@ -2,6 +2,7 @@ defmodule BooApiWeb.UserControllerTest do
   use BooApiWeb.ConnCase
 
   import BooApi.Factory
+  import Mox
 
   alias BooApi.Guardian
 
@@ -32,6 +33,11 @@ defmodule BooApiWeb.UserControllerTest do
 
   describe "create user" do
     test "returns a jwt when data is valid", %{conn: conn, valid: valid} do
+      BooApi.EncryptionApi.MockBcrypt
+      |> expect(:encrypt, fn _ ->
+          "hashed"
+      end)
+
       conn = post(conn, Routes.user_path(conn, :create), user: valid)
       assert %{"jwt" => jwt} = json_response(conn, 200)
     end
@@ -62,6 +68,11 @@ defmodule BooApiWeb.UserControllerTest do
     end
 
     test "renders user when data is valid", %{conn: conn, user: user, update: update} do
+      BooApi.EncryptionApi.MockBcrypt
+      |> expect(:encrypt, fn _ ->
+          "hashed"
+      end)
+
       conn = conn |> put(Routes.user_path(conn, :update), user: update)
 
       assert %{"id" => user.id, "email" => update[:email]} == json_response(conn, 200)["data"]

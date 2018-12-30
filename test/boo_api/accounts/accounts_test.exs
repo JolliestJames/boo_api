@@ -1,8 +1,9 @@
 defmodule BooApi.AccountsTest do
   use BooApi.DataCase
 
-  import Comeonin.Bcrypt, only: [check_pass: 2]
+  # import Comeonin.Bcrypt, only: [check_pass: 2]
   import BooApi.Factory
+  import Mox
 
   alias BooApi.Accounts
   alias BooApi.Accounts.User
@@ -28,9 +29,14 @@ defmodule BooApi.AccountsTest do
 
   describe "create_user/1" do
     test "with valid data creates a user", %{valid: valid} do
+      BooApi.EncryptionApi.MockBcrypt
+      |> expect(:encrypt, fn _ ->
+          "hashed"
+      end)
+
       assert {:ok, %User{} = user} = Accounts.create_user(valid)
       assert user.email == valid[:email]
-      assert check_pass(user, valid[:password]) == {:ok, user}
+      # assert check_pass(user, valid[:password]) == {:ok, user}
     end
 
     test "with invalid data returns error changeset", %{invalid: invalid} do
@@ -52,9 +58,14 @@ defmodule BooApi.AccountsTest do
 
   describe "update_user/2" do
     test "with valid data updates the user", %{user: user, update: update} do
+      BooApi.EncryptionApi.MockBcrypt
+      |> expect(:encrypt, fn _ ->
+          "hashed"
+      end)
+
       assert {:ok, %User{} = user} = Accounts.update_user(user, update)
       assert user.email == update[:email]
-      assert check_pass(user, update[:password]) == {:ok, user}
+      # assert check_pass(user, update[:password]) == {:ok, user}
     end
 
     test "with invalid data returns error changeset", %{user: user, invalid: invalid} do
