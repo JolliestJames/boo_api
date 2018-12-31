@@ -75,4 +75,20 @@ defmodule BooApi.AccountsTest do
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
     end
   end
+
+  describe "sign_in/2" do
+    setup do
+      user = params_for(:user)
+      Accounts.create_user(user)
+      {:ok, user: user, invalid: params_for(:user)}
+    end
+
+    test "with valid email and password returns a JWT", %{user: user} do
+      assert {:ok, token, _claims} = Accounts.sign_in(user.email, user.password)
+    end
+
+    test "with invalid email or password returns an error", %{invalid: invalid} do
+      assert {:error, :unauthorized} = Accounts.sign_in(invalid.email, invalid.password)
+    end
+  end
 end
