@@ -15,6 +15,8 @@ defmodule BooApiWeb.ChannelCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       # Import conveniences for testing with channels
@@ -26,10 +28,10 @@ defmodule BooApiWeb.ChannelCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(BooApi.Repo)
+    :ok = Sandbox.checkout(BooApi.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(BooApi.Repo, {:shared, self()})
+      Sandbox.mode(BooApi.Repo, {:shared, self()})
     end
 
     :ok
