@@ -16,6 +16,7 @@ defmodule BooApiWeb.Router do
 
     post "/sign_in", UserController, :sign_in
     post "/sign_up", UserController, :create
+    get "/", UserController, :index
   end
 
   scope "/api/v1", BooApiWeb do
@@ -24,11 +25,5 @@ defmodule BooApiWeb.Router do
     delete "/user/delete", UserController, :delete
     put "/user/update", UserController, :update
     get "/user", UserController, :show
-  end
-
-  scope "/api", BooApiWeb do
-    pipe_through :api
-
-    resources "/users", UserController, except: [:new, :edit, :show]
   end
 end
