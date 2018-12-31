@@ -1,4 +1,8 @@
 defmodule BooApi.UserFactory do
+  @moduledoc """
+  Factory for users
+  """
+
   defmacro __using__(_opts) do
     quote do
       def user_factory do

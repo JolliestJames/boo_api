@@ -1,4 +1,8 @@
 defmodule BooApi.AuthErrorHandler do
+  @moduledoc """
+  Error handling for when calls to authenticated routes fail due to not being authenticated
+  """
+
   import Plug.Conn
 
   def auth_error(conn, {type, _reason}, _opts) do

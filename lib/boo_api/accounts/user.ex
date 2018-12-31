@@ -1,4 +1,8 @@
 defmodule BooApi.Accounts.User do
+  @moduledoc """
+  The User struct.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]

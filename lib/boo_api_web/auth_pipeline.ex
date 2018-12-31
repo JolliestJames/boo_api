@@ -1,4 +1,8 @@
 defmodule BooApi.Guardian.AuthPipeline do
+  @moduledoc """
+  Authentication pipeline for verfying a resource is authenticated with Guardian before accessing certain controller actions
+  """
+
   use Guardian.Plug.Pipeline, otp_app: :BooApi,
   module: BooApi.Guardian,
   error_handler: BooApi.AuthErrorHandler
