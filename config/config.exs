@@ -17,10 +17,6 @@ config :boo_api, BooApiWeb.Endpoint,
   render_errors: [view: BooApiWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: BooApi.PubSub, adapter: Phoenix.PubSub.PG2]
 
-config :boo_api, BooApi.Guardian,
-  issuer: "BooApi",
-  secret_key: System.get_env("GUARDIAN_SECRET")
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -29,6 +25,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Import guardian config
+import_config "secrets/config.secret.exs"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
+

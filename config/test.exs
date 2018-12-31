@@ -9,12 +9,7 @@ config :boo_api, BooApiWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-# Configure your database
-config :boo_api, BooApi.Repo,
-  username: System.get_env("DB_USERNAME"),
-  password: System.get_env("DB_PASSWORD"),
-  database: "boo_api_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+# Import db config
+import_config "secrets/test.secret.exs"
 
 config :bcrypt_elixir, log_rounds: 4

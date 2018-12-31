@@ -47,10 +47,5 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-# Configure your database
-config :boo_api, BooApi.Repo,
-  username: System.get_env("DB_USERNAME"),
-  password: System.get_env("DB_PASSWORD"),
-  database: "boo_api_dev",
-  hostname: "localhost",
-  pool_size: 10
+# Import db config
+import_config "secrets/dev.secret.exs"
