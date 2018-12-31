@@ -3,13 +3,7 @@
 To start the server:
 
 * Install dependencies with `mix deps.get`
-* Create a `.env` file in the project directory and supply the following environment variables:
-```
-export DB_USERNAME='<your_db_username>'
-export DB_PASSWORD='<your_db_password>'
-export GUARDIAN_SECRET='<mix phx.gen.secret>'
-```
-* Load environment variables with `source .env`
+* Create the appropriate *.secret.exs files for each config file inside of `config/secrets`. Please refer to `secret_examples.exs`.
 * Create and migrate the database with `mix ecto.setup`
 * Start Phoenix endpoint with `mix phx.server`
 
