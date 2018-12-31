@@ -41,5 +41,9 @@ boo_api-*.tar
 # Environment variables
 .env
 
+# DS stuff
 .DS_Store
 /lib/.DS_Store
+
+# Ignore credo config
+.credo.exs
