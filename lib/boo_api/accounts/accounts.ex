@@ -52,7 +52,6 @@ defmodule BooApi.Accounts do
 
   @doc """
   Gets a single user.
-
   """
   def get_user!(id), do: Repo.get!(User, id)
 

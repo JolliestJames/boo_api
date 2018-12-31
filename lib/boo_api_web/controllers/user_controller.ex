@@ -29,7 +29,6 @@ defmodule BooApiWeb.UserController do
     end
   end
 
-  @spec show(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def show(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
     conn |> render("user.json", user: user)
