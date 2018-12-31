@@ -4,12 +4,11 @@ defmodule BooApi.Accounts do
   """
 
   import Ecto.Query, warn: false
-  alias BooApi.Repo
+  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0, hashpwsalt: 1]
 
   alias BooApi.Accounts.User
-
   alias BooApi.Guardian
-  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+  alias BooApi.Repo
 
   @doc """
   Returns the list of users.
@@ -29,6 +28,7 @@ defmodule BooApi.Accounts do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> hash_password
     |> Repo.insert()
   end
 
@@ -38,6 +38,7 @@ defmodule BooApi.Accounts do
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
+    |> hash_password
     |> Repo.update()
   end
 
@@ -61,6 +62,16 @@ defmodule BooApi.Accounts do
         Guardian.encode_and_sign(user)
       _ ->
         {:error, :unauthorized}
+    end
+  end
+
+  defp hash_password(changeset) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{password: pass}}
+        ->
+          Ecto.Changeset.put_change(changeset, :password_hash, hashpwsalt(pass))
+      _ ->
+          changeset
     end
   end
 
