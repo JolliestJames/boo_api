@@ -46,7 +46,8 @@ defmodule BooApi.MixProject do
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
       {:guardian, "~> 1.0"},
-      {:ex_machina, "~> 2.2", only: :test}
+      {:ex_machina, "~> 2.2", only: :test},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end
 
