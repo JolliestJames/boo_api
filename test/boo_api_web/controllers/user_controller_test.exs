@@ -3,6 +3,7 @@ defmodule BooApiWeb.UserControllerTest do
 
   import BooApi.Factory
 
+  alias BooApi.Accounts
   alias BooApi.Guardian
 
   setup %{conn: conn} do
@@ -84,6 +85,36 @@ defmodule BooApiWeb.UserControllerTest do
 
       assert response(conn, 204)
       assert_error_sent 404, fn -> get(conn, Routes.user_path(conn, :show)) end
+    end
+  end
+
+  describe "sign in user" do
+    setup do
+      user = params_for(:user)
+      Accounts.create_user(user)
+      {
+        :ok,
+        user: %{
+          "email" => user.email,
+          "password" => user.password
+        },
+        invalid: %{
+          "email" => "invalid_email@test.com",
+          "password" => "invalid_password"
+        }
+      }
+    end
+
+    test "with a valid email and password renders a JSON response with JWT", %{conn: conn, user: user} do
+      conn = conn |> post(Routes.user_path(conn, :sign_in, user))
+
+      assert %{"jwt" => jwt} = json_response(conn, 200)
+    end
+
+    test "with an invalid email or password returns an error", %{conn: conn, invalid: invalid} do
+      conn = conn |> post(Routes.user_path(conn, :sign_in, invalid))
+
+      assert %{"error" => "Login error"} = json_response(conn, 401)
     end
   end
 
